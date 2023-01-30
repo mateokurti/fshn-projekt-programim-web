@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  php:
+    container_name: php
+    image: php
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "8023:80"
+
+  db:
+    container_name: db
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: demo_fshn
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./db/dummy_data.sql:/docker-entrypoint-initdb.d/2.sql
+    ports:
+      - "3336:3306"
